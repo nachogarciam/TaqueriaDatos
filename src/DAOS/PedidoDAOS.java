@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Nacho
  */
-public class PedidoDAO {
+public class PedidoDAOS{
     
     private static final String SQL_INSERT
             = "INSERT INTO pedidos ("
