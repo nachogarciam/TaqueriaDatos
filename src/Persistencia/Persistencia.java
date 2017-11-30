@@ -7,6 +7,7 @@ package Persistencia;
 
 import DAOS.*;
 import DTO.ClienteDTO;
+import DTO.PedidoDTO;
 import Interfaz.IPersistencia;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,7 +23,7 @@ public class Persistencia implements IPersistencia {
 
     private Connection conn;
     private ClienteDAO cliente;
-//    private PedidoDAO pedido;
+    private PedidoDAO pedido;
 //    private RepartidorDAO repartidor;
 
     public Persistencia() {
@@ -38,7 +39,7 @@ public class Persistencia implements IPersistencia {
             e.printStackTrace();
         }
         cliente = new ClienteDAO();
-//        pedido = new ClienteDAO();
+        pedido = new PedidoDAO();
     }
 
     @Override
@@ -64,6 +65,31 @@ public class Persistencia implements IPersistencia {
     @Override
     public void elimina(ClienteDTO dto) throws SQLException {
         cliente.delete(dto, conn);
+    }
+
+    @Override
+    public void crear(PedidoDTO dto) throws SQLException {
+        pedido.create(dto, conn);
+    }
+
+    @Override
+    public ArrayList<PedidoDTO> listarPedidos() throws SQLException {
+        return pedido.loadAll(conn);
+    }
+
+    @Override
+    public PedidoDTO leer(PedidoDTO dto) throws SQLException {
+        return pedido.load(dto, conn);
+    }
+
+    @Override
+    public void actualiza(PedidoDTO dto) throws SQLException {
+        pedido.update(dto, conn);
+    }
+
+    @Override
+    public void elimina(PedidoDTO dto) throws SQLException {
+        pedido.delete(dto, conn);
     }
 
 }

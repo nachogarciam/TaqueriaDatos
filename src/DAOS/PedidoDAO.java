@@ -18,17 +18,17 @@ import java.util.List;
  *
  * @author Nacho
  */
-public class PedidoDAOS{
+public class PedidoDAO{
     
     private static final String SQL_INSERT
             = "INSERT INTO pedidos ("
-            + "idCliente,Telefono, Orden, Fecha"
-            + ") VALUES (?, ?, ?, ?)";
+            + "idCliente,Telefono, Orden, Fecha, Entregado"
+            + ") VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_SELECT
             = "SELECT idPedido, idCliente, Orden, Fecha, Entregado"
             + " FROM pedidos where Telefono = ?";
     private static final String SQL_SELECT_ALL
-            = "SELECT idPedido, idCliente, Orden, Fecha, Entregado "
+            = "SELECT idPedido, Telefono, Orden, Fecha, Entregado "
             + "FROM pedidos";
     private static final String SQL_UPDATE
             = "UPDATE pedidos SET "
@@ -43,12 +43,15 @@ public class PedidoDAOS{
     public void create(PedidoDTO dto, Connection conn) throws SQLException{
         PreparedStatement ps = null;
         try {
+//            System.out.println("qweqwe");
             ps = conn.prepareStatement(SQL_INSERT);
 
-            ps.setInt(1, Integer.parseInt(dto.getCliente().getIdCliente())  );
-            ps.setInt(2, Integer.parseInt(dto.getCliente().getTelefono()));
+            ps.setInt(1, Integer.parseInt(dto.getCliente().getIdCliente()));
+            ps.setString(2, dto.getCliente().getTelefono());
             ps.setString(3, dto.getOrden());
             ps.setDate(4,dto.getFecha());
+            ps.setInt(5, 0);
+            
 
             ps.executeUpdate();
 
@@ -129,11 +132,12 @@ public class PedidoDAOS{
      private List getResults(ResultSet rs) throws SQLException{
         List results = new ArrayList();
         while (rs.next()) {
-            ClienteDTO dto = new ClienteDTO();
-            dto.setIdCliente(rs.getString("idCliente"));
-            dto.setNombre(rs.getString("Nombre"));
-            dto.setDireccion(rs.getString("Direccion"));
-            dto.setTelefono(rs.getString("Telefono"));
+            PedidoDTO dto = new PedidoDTO();
+            dto.id=(rs.getInt("idPedido"));
+            dto.cliente=(new ClienteDTO(rs.getString("Telefono")));
+            dto.setOrden(rs.getString("Orden"));
+            dto.setFecha(rs.getDate("Fecha"));
+            dto.entregado=rs.getBoolean("Entregado");
             results.add(dto);
         }
         return results;

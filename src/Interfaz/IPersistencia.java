@@ -6,6 +6,7 @@
 package Interfaz;
 
 import DTO.ClienteDTO;
+import DTO.PedidoDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,15 @@ public interface IPersistencia {
 
     public void elimina(ClienteDTO dto) throws SQLException;
 
-//    public void crear(PedidoDTO dto) throws SQLException;
-//
-//    public ArrayList<ClienteDTO> listarPedidos() throws SQLException;
-//
-//    public PedidoDTO leer(PedidoDTO dto) throws SQLException;
-//
-//    public void actualiza(PedidoDTO dto) throws SQLException;
-//
-//    public void elimina(PedidoDTO dto) throws SQLException;
+    public void crear(PedidoDTO dto) throws SQLException;
+
+    public ArrayList<PedidoDTO> listarPedidos() throws SQLException;
+
+    public PedidoDTO leer(PedidoDTO dto) throws SQLException;
+
+    public void actualiza(PedidoDTO dto) throws SQLException;
+
+    public void elimina(PedidoDTO dto) throws SQLException;
 //
 //    public void crear(RepartidorDTO dto) throws SQLException;
 //
