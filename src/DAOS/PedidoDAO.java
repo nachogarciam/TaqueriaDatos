@@ -111,7 +111,7 @@ public class PedidoDAO {
         ResultSet rs = null;
         try {
             ps = conn.prepareStatement(SQL_SELECT_ENTREGADO);
-            ps.setBoolean(1, true);
+            ps.setBoolean(1, dto.isEntregado());
             rs = ps.executeQuery();
             List results = getResults(rs);
 

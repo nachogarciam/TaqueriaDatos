@@ -31,7 +31,7 @@ public class ClienteDAO {
             + "FROM clientes";
     private static final String SQL_UPDATE
             = "UPDATE clientes SET "
-            + "Nombre = ?, Direccion = ?, Telefono = ? "
+            + "Nombre = ?, Direccion = ?, Telefono = ?"
             + " WHERE "
             + "idCliente = ? ";
     private static final String SQL_DELETE
