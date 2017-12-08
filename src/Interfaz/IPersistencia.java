@@ -30,6 +30,7 @@ public interface IPersistencia {
     public void crear(PedidoDTO dto) throws SQLException;
 
     public ArrayList<PedidoDTO> listarPedidos() throws SQLException;
+    
 
     public PedidoDTO leer(PedidoDTO dto) throws SQLException;
 

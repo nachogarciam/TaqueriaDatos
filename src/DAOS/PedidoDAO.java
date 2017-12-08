@@ -19,8 +19,8 @@ import java.util.List;
  *
  * @author Nacho
  */
-public class PedidoDAO{
-    
+public class PedidoDAO {
+
     private static final String SQL_INSERT
             = "INSERT INTO pedidos ("
             + "idCliente,Telefono, Orden, Fecha, Entregado"
@@ -31,6 +31,10 @@ public class PedidoDAO{
     private static final String SQL_SELECT_ALL
             = "SELECT idPedido, Telefono, Orden, Fecha, Entregado "
             + "FROM pedidos";
+    private static final String SQL_SELECT_ENTREGADO
+            = "SELECT idPedido, Telefono, Orden, Fecha, Entregado "
+            + "FROM pedidos where Entregado= ?";
+
     private static final String SQL_UPDATE
             = "UPDATE pedidos SET "
             + "Orden = ?, Entregado = ?, idRepartidor = ? "
@@ -40,8 +44,8 @@ public class PedidoDAO{
             = "DELETE FROM pedidos "
             + " WHERE "
             + "Telefono = ?";
-    
-    public void create(PedidoDTO dto, Connection conn) throws SQLException{
+
+    public void create(PedidoDTO dto, Connection conn) throws SQLException {
         PreparedStatement ps = null;
         try {
 //            System.out.println("qweqwe");
@@ -50,9 +54,8 @@ public class PedidoDAO{
             ps.setInt(1, Integer.parseInt(dto.getCliente().getIdCliente()));
             ps.setString(2, dto.getCliente().getTelefono());
             ps.setString(3, dto.getOrden());
-            ps.setTimestamp(4,dto.getFecha());
+            ps.setTimestamp(4, dto.getFecha());
             ps.setInt(5, 0);
-            
 
             ps.executeUpdate();
 
@@ -62,11 +65,11 @@ public class PedidoDAO{
         }
     }
 
-   public ArrayList<PedidoDTO> loadAll(Connection conn) throws SQLException{
-       PreparedStatement ps = null;
+    public ArrayList<PedidoDTO> loadAll(Connection conn) throws SQLException {
+        PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement(SQL_SELECT_ALL);            
+            ps = conn.prepareStatement(SQL_SELECT_ALL);
             rs = ps.executeQuery();
             ArrayList<PedidoDTO> results = (ArrayList<PedidoDTO>) getResults(rs);
             ps.executeQuery();
@@ -78,11 +81,11 @@ public class PedidoDAO{
         } finally {
             cerrar(ps);
             cerrar(rs);
-            cerrar(conn);            
+            cerrar(conn);
         }
-   }
+    }
 
-    public PedidoDTO load(PedidoDTO dto, Connection conn) throws SQLException{
+    public PedidoDTO load(PedidoDTO dto, Connection conn) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -90,7 +93,7 @@ public class PedidoDAO{
             ps.setString(1, dto.getTelefono());
             rs = ps.executeQuery();
             List results = getResults(rs);
-           
+
             if (results.size() > 0) {
                 return (PedidoDTO) results.get(0);
             } else {
@@ -99,83 +102,111 @@ public class PedidoDAO{
         } finally {
             cerrar(ps);
             cerrar(rs);
-            cerrar(conn);            
+            cerrar(conn);
         }
     }
 
-    public void update(PedidoDTO dto,Connection conn) throws SQLException{
-         PreparedStatement ps = null;       
+    public PedidoDTO loadEntregado(PedidoDTO dto, Connection conn) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            ps = conn.prepareStatement(SQL_UPDATE);             
+            ps = conn.prepareStatement(SQL_SELECT_ENTREGADO);
+            ps.setBoolean(1, true);
+            rs = ps.executeQuery();
+            List results = getResults(rs);
+
+            if (results.size() > 0) {
+                return (PedidoDTO) results.get(0);
+            } else {
+                return null;
+            }
+        } finally {
+            cerrar(ps);
+            cerrar(rs);
+            cerrar(conn);
+        }
+    }
+
+    public void update(PedidoDTO dto, Connection conn) throws SQLException {
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(SQL_UPDATE);
             ps.setString(1, dto.getOrden());
             ps.setBoolean(2, dto.isEntregado());
-            ps.setString(3, dto.getRepartidor().getNombre());            
-            ps.executeUpdate();            
+            ps.setString(3, dto.getRepartidor().getNombre());
+            ps.executeUpdate();
         } finally {
-            cerrar(ps);            
-            cerrar(conn);            
+            cerrar(ps);
+            cerrar(conn);
         }
     }
 
-    public void delete(PedidoDTO dto,Connection conn) throws SQLException{
-        PreparedStatement ps = null;       
+    public void delete(PedidoDTO dto, Connection conn) throws SQLException {
+        PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement(SQL_DELETE); 
-            ps.setString(1, dto.getCliente().getTelefono());  
-            ps.executeUpdate();            
+            ps = conn.prepareStatement(SQL_DELETE);
+            ps.setString(1, dto.getCliente().getTelefono());
+            ps.executeUpdate();
         } finally {
-            cerrar(ps);            
-            cerrar(conn);            
+            cerrar(ps);
+            cerrar(conn);
         }
     }
-    
-    
-     private List getResults(ResultSet rs) throws SQLException{
+
+    private List getResults(ResultSet rs) throws SQLException {
         List results = new ArrayList();
         while (rs.next()) {
             PedidoDTO dto = new PedidoDTO();
-            dto.id=(rs.getInt("idPedido"));
-            dto.cliente=(new ClienteDTO(rs.getString("Telefono")));
+            dto.id = (rs.getInt("idPedido"));
+            dto.cliente = (new ClienteDTO(rs.getString("Telefono")));
             dto.setOrden(rs.getString("Orden"));
             dto.setFecha(rs.getTimestamp("Fecha"));
-            dto.entregado=rs.getBoolean("Entregado");
+            dto.entregado = rs.getBoolean("Entregado");
             results.add(dto);
         }
         return results;
     }
-     
-      /**
+
+    /**
      * Método para cerrar el PreparedStatement
+     *
      * @param ps
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private void cerrar (PreparedStatement ps) throws SQLException{
+    private void cerrar(PreparedStatement ps) throws SQLException {
         if (ps != null) {
             try {
                 ps.close();
-            } catch(SQLException e) {}
+            } catch (SQLException e) {
+            }
         }
     }
+
     /**
      * Método para cerrar el ResultSet
-     * @param rs 
+     *
+     * @param rs
      */
-    private void cerrar (ResultSet rs) {
+    private void cerrar(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
-            } catch(SQLException e) {}
+            } catch (SQLException e) {
+            }
         }
     }
+
     /**
      * Método para cerrar la conexión a base de datos
-     * @param conn 
+     *
+     * @param conn
      */
     private void cerrar(Connection conn) {
         if (conn != null) {
             try {
                 conn.close();
-            } catch(SQLException e) {}
-        } 
+            } catch (SQLException e) {
+            }
+        }
     }
 }
