@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public class PedidoDAO{
             ps.setInt(1, Integer.parseInt(dto.getCliente().getIdCliente()));
             ps.setString(2, dto.getCliente().getTelefono());
             ps.setString(3, dto.getOrden());
-            ps.setDate(4,dto.getFecha());
+            ps.setTimestamp(4,dto.getFecha());
             ps.setInt(5, 0);
             
 
@@ -136,7 +137,7 @@ public class PedidoDAO{
             dto.id=(rs.getInt("idPedido"));
             dto.cliente=(new ClienteDTO(rs.getString("Telefono")));
             dto.setOrden(rs.getString("Orden"));
-            dto.setFecha(rs.getDate("Fecha"));
+            dto.setFecha(rs.getTimestamp("Fecha"));
             dto.entregado=rs.getBoolean("Entregado");
             results.add(dto);
         }
