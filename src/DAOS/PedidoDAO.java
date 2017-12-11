@@ -37,13 +37,13 @@ public class PedidoDAO {
 
     private static final String SQL_UPDATE
             = "UPDATE pedidos SET "
-            + "Orden = ?, Entregado = ?, idRepartidor = ? "
+            + "Orden = ?, Entregado = ?"
             + " WHERE "
-            + "Telefono = ? ";
+            + "idPedido = ? ";
     private static final String SQL_DELETE
             = "DELETE FROM pedidos "
             + " WHERE "
-            + "Telefono = ?";
+            + "idPedido = ?";
 
     public void create(PedidoDTO dto, Connection conn) throws SQLException {
         PreparedStatement ps = null;
@@ -133,7 +133,8 @@ public class PedidoDAO {
             ps = conn.prepareStatement(SQL_UPDATE);
             ps.setString(1, dto.getOrden());
             ps.setBoolean(2, dto.isEntregado());
-            ps.setString(3, dto.getRepartidor().getNombre());
+            ps.setInt(3,dto.id);
+//            ps.setString(3, dto.getRepartidor().getNombre());
             ps.executeUpdate();
         } finally {
             cerrar(ps);
