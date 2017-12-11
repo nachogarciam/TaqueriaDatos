@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -26,7 +26,7 @@ public class PedidoDAO {
             + "idCliente,Telefono, Orden, Fecha, Entregado"
             + ") VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_SELECT
-            = "SELECT idPedido, idCliente, Orden, Fecha, Entregado"
+            = "SELECT idPedido, idCliente, Telefono, Orden, Fecha, Entregado"
             + " FROM pedidos where Telefono = ?";
     private static final String SQL_SELECT_ALL
             = "SELECT idPedido, Telefono, Orden, Fecha, Entregado "
@@ -145,7 +145,7 @@ public class PedidoDAO {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement(SQL_DELETE);
-            ps.setString(1, dto.getCliente().getTelefono());
+            ps.setString(1, dto.getTelefono());
             ps.executeUpdate();
         } finally {
             cerrar(ps);
